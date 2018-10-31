@@ -1,9 +1,21 @@
-
+/**
+ * Classe que representa um Produto do SAGA
+ * @author Almir Crispiniano - 117210914
+ *
+ */
 public class Produto {
+	/**
+	 * Atributos que compoem um Produto representados em String
+	 */
 	private String preco;
 	private String nome;
 	private String descricao;
-	
+	/**
+	 * Construtor
+	 * @param preco
+	 * @param nome
+	 * @param descricao
+	 */
 	public Produto(String preco, String nome, String descricao) {
 		super();
 		this.preco = preco;
@@ -23,6 +35,20 @@ public class Produto {
 		return descricao;
 	}
 
+	public void setPreco(String preco) {
+		this.preco = preco;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	/**
+	 * Metodo que gera um HashCode a partir do nome e descricao do Produto
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -31,7 +57,9 @@ public class Produto {
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
-
+	/**
+	 * Metodo 'equals' que define que dois produtos são iguais se possuirem o mesmo nome e descrição
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -53,7 +81,9 @@ public class Produto {
 			return false;
 		return true;
 	}
-
+	/**
+	 * Metodo toString que define a representacao textual da classe Produto
+	 */
 	@Override
 	public String toString() {
 		return this.getNome() + "-" + this.getDescricao() + "-" + this.getPreco();
