@@ -1,19 +1,24 @@
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 /**
  * Classe responsavel por possuir os metodos da classe Fornecedor
  * @author Almir Crispiniano - 117210914
  *
  */
 public class FornecedorController {
-	
+	/**
+	 * Mapa que a chave representa o nome do fornecedor e o valor um fornecedor
+	 * Comparator que organiza os fornecedores em ordem alfabetica pelo seu nome
+	 */
 	private Map<String, Fornecedor> fornecedores;
-	private Map<Fornecedor, Produto> produtoDosFornecedores;
+	private Comparator<Fornecedor> ordAlfabetica;
 
 	public FornecedorController() {
 		this.fornecedores = new HashMap<>();
-		this.produtoDosFornecedores = new HashMap<>();
+		this.ordAlfabetica = new FornecedorOrdemAlfabetica();
 	}
 	
 	/**
@@ -25,30 +30,29 @@ public class FornecedorController {
 		return this.fornecedores.containsKey(nome);
 	}
 	/**
-	 * Metodo que cadastra um fornecedor no mapa de fornecedores(se esse fornecedor não existir)
+	 * Metodo que cadastra um fornecedor no mapa de fornecedores
 	 * @param nome
 	 * @param email
 	 * @param telefone
 	 */
 	public void adicionaFornecedor(String nome,String email, String telefone) {
-		if(nome == null || nome.trim().equals("")) {
+		if(nome == null || nome.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro no cadastro do fornecedor: nome nao pode ser vazio ou nulo.");
 		}
-		if(email == null || email.trim().equals("")) {
+		if(email == null || email.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro no cadastro do fornecedor: email nao pode ser vazio ou nulo.");
 		}
 		if(this.existeFornecedor(nome)) {
 			throw new IllegalArgumentException("Erro no cadastro de fornecedor: fornecedor ja existe.");
 		}
-		if(!this.existeFornecedor(nome)) {
-			Fornecedor f = new Fornecedor(nome, email, telefone);
-			this.fornecedores.put(nome, f);
-		}
+		Fornecedor f = new Fornecedor(nome, email, telefone);
+		this.fornecedores.put(nome, f);
+		
 	}
 	/**
-	 * Metodo que pesquisa um fornecedor pelo seu nome e exibe sua representacao texutal
+	 * Metodo que pesquisa um fornecedor pelo seu nome 
 	 * @param nome
-	 * @return
+	 * @return uma String com sua representacao textual
 	 */
 	public String exibeFornecedor(String nome) {
 		if(!this.existeFornecedor(nome)) {
@@ -58,12 +62,15 @@ public class FornecedorController {
 		}
 	}
 	/**
-	 * Metodo que lista todos os fornecedores do mapa
-	 * @return
+	 * Metodo que lista todos os fornecedores em ordem alfabetica
+	 * @return lista de fornecedores
 	 */
-	public String listaFornecedores() {
+	public String exibeFornecedores() {
 		String lista = "";
-		for (Fornecedor f : this.fornecedores.values()) {
+		List<Fornecedor> listaOrd = new ArrayList<>();
+		listaOrd.addAll(this.fornecedores.values());
+		listaOrd.sort(ordAlfabetica);
+		for (Fornecedor f : listaOrd) {
 			lista += f.toString() + " | ";
 		}return lista;
 	}
@@ -74,16 +81,24 @@ public class FornecedorController {
 	 * @param novoValor
 	 */
 	public void editaFornecedor(String nome, String atributo, String novoValor) {
-		if (this.existeFornecedor(nome)) {
-			if(atributo.equals("nome")) {
-				throw new IllegalArgumentException("Erro na edicao do fornecedor: nome nao pode ser editado.");
-			}else if(atributo.equals("email")) {
-				fornecedores.get(nome).setEmail(novoValor);
-			}else if(atributo.equals("telefone")) {
-				fornecedores.get(nome).setTelefone(novoValor);
-			}
+		if(atributo == null || atributo.trim().isEmpty()){
+			throw new IllegalArgumentException("Erro na edicao do fornecedor: atributo nao pode ser vazio ou nulo.");
 		}
-		
+		if(novoValor == null || novoValor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao do fornecedor: novo valor nao pode ser vazio ou nulo.");
+		}
+		if(!atributo.equals("email") || !atributo.equals("telefone")) {
+			throw new IllegalArgumentException("Erro na edicao do fornecedor: atributo nao existe.");
+		}
+		if(atributo.equals("nome")) {
+			throw new IllegalArgumentException("Erro na edicao do fornecedor: nome nao pode ser editado.");
+		}
+		if(atributo.equals("email")) {
+			fornecedores.get(nome).setEmail(novoValor);
+		}
+		if(atributo.equals("telefone")) {
+			fornecedores.get(nome).setTelefone(novoValor);
+		}
 	}
 	/**
 	 * Metodo que remove um fornecedor do mapa a partir do seu nome
@@ -91,62 +106,105 @@ public class FornecedorController {
 	 * @return
 	 */
 	public Fornecedor removeFornecedor(String nome) {
-		if(nome.trim().equals("")) {
+		if(nome.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro na remocao do fornecedor: nome do fornecedor nao pode ser vazio.");
 		}
 		if(!this.existeFornecedor(nome)) {
 			throw new IllegalArgumentException("Erro na exibicao do fornecedor: fornecedor nao existe.");
 		}return this.fornecedores.remove(nome);
 	}
-	
 	/**
-	 * Metodo que verifica a existencia de um fornecedor de tal produto
-	 * @param fornecedor
-	 * @return
+	 * Metodo que adiciona um produto a um fornecedor
+	 * @param nomeFornecedor
+	 * @param nome
+	 * @param descricao
+	 * @param preco
 	 */
-	public boolean existefornecedorDoProduto(Fornecedor fornecedor) {
-		return this.produtoDosFornecedores.containsKey(fornecedor);
+	public void adicionaProduto(String fornecedor, String nome, String descricao, double preco) {
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no cadastro de produto: nome nao pode ser vazio ou nulo.");
+		}
+		if (descricao == null || descricao.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no cadastro de produto: descricao nao pode ser vazia ou nula.");
+		}
+		if(fornecedor == null || fornecedor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no cadastro de produto: fornecedor nao pode ser vazio ou nula.");
+		}
+		if(preco < 0) {
+			throw new IllegalArgumentException("Erro no cadastro de produto: preco invalido.");
+		}
+		if(!this.existeFornecedor(fornecedor)) {
+			throw new IllegalArgumentException("Erro no cadastro de produto: fornecedor nao existe.");
+		}
+		fornecedores.get(fornecedor).adicionaProduto(nome, descricao, preco);
 	}
 	/**
-	 * Metodo que cadastra um produto em um fornecedor
+	 * Metodo que exibe um produto de um dado fornecedor
 	 * @param fornecedor
-	 * @param preco
+	 * @param nome
+	 * @param descricao
+	 * @return String contendo representação textual do produto do fornecedor
+	 */
+	public String exibeProduto(String fornecedor, String nome, String descricao) {
+		if(!this.existeFornecedor(nome)) {
+			throw new IllegalArgumentException("Erro na exibicao de produto: fornecedor nao existe.");
+		}
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na exibicao de produto: nome nao pode ser vazio ou nulo.");
+		}
+		if(descricao == null || descricao.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na exibicao de produto: descricao nao pode ser vazia ou nula.");
+		}
+		if(fornecedor == null || fornecedor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na exibicao de produto: fornecedor nao pode ser vazio ou nulo.");
+		}
+		return fornecedores.get(fornecedor).exibeProduto(nome, descricao);
+	}
+	/**
+	 * Metodo que edita um produto de um dado fornecedor
+	 * @param fornecedor
+	 * @param nome
+	 * @param descricao
+	 * @param novoPreco
+	 */
+	public void editaProduto(String fornecedor, String nome, String descricao, double novoPreco) {
+		if(!this.existeFornecedor(fornecedor)) {
+			throw new IllegalArgumentException("Erro na edicao de produto: fornecedor nao existe.");
+		}
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao de produto: nome nao pode ser vazio ou nulo.");
+		}
+		if(descricao == null || descricao.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao de produto: descricao nao pode ser vazia ou nula.");
+		}
+		if(fornecedor == null || fornecedor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao de produto: fornecedor nao pode ser vazio ou nulo.");
+		}
+		if(novoPreco < 0) {
+			throw new IllegalArgumentException("Erro na edicao de produto: preco invalido.");
+		}
+		fornecedores.get(fornecedor).editaProduto(nome, descricao, novoPreco);
+	}
+	/**
+	 * Metodo que remove um produto de um determinado fornecedor
+	 * @param fornecedor
 	 * @param nome
 	 * @param descricao
 	 */
-	public void adicionafornecedorDoProduto(Fornecedor fornecedor, String preco, String nome, String descricao) {
-		if(this.existefornecedorDoProduto(fornecedor)) {
-			Produto p = new Produto(preco, nome, descricao);
-			this.produtoDosFornecedores.put(fornecedor, p);
+	public void removeProduto(String fornecedor,String nome, String descricao) {
+		if(!this.existeFornecedor(fornecedor)) {
+			throw new IllegalArgumentException("Erro na remocao de produto: fornecedor nao existe.");
 		}
-	}
-	/**
-	 * Metodo que retorna a representacao textual de um produto a partir do seu fornecedor
-	 * @param fornecedor
-	 * @return
-	 */
-	public String exibeProdutoDeFornecedor(Fornecedor fornecedor) {
-		return this.produtoDosFornecedores.get(fornecedor).toString();
-	}
-	
-	public void listarProdutosFornecedor(Fornecedor fornecedor) {
-		
-	}
-	
-	public void listarProdutosTodosOsFornecedores() {
-		
-	}
-	
-	public void EditaProdutoDoFornecedor() {
-		
-	}
-	/**
-	 * Metodo que remove um produto do mapa a partir do seu fornecedor
-	 * @param fornecedor
-	 * @return
-	 */
-	public Produto removerProdutoDoFornecedor(Fornecedor fornecedor) {
-		return this.produtoDosFornecedores.remove(fornecedor);
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na remocao de produto: nome nao pode ser vazio ou nulo.");
+		}
+		if(descricao == null || descricao.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na remocao de produto: descricao nao pode ser vazia ou nula.");
+		}
+		if(fornecedor == null || fornecedor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na remocao de produto: fornecedor nao pode ser vazio ou nulo.");
+		}
+		fornecedores.get(fornecedor).removeProduto(nome, descricao);
 	}
 
 }

@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 /**
  * Classe responsavel por possuir os metodos da classe Cliente
@@ -6,11 +9,16 @@ import java.util.Map;
  *
  */
 public class ClienteController {
-	
+	/**
+	 * Mapa contendo um chave que representa o CPF e um valor que representa o cliente
+	 * Comparator que organiza os clientes em ordem alfabetica pela seu nome
+	 */
 	private Map<String, Cliente> clientes;
+	private Comparator<Cliente> ordemAlfabetica;
 
 	public ClienteController() {
 		this.clientes = new HashMap<>();
+		this.ordemAlfabetica = new ClienteOrdemAlfabetica();
 	}
 	/**
 	 * Metodo booleano que verifica se o mapa possui tal CPF
@@ -23,29 +31,27 @@ public class ClienteController {
 	/**
 	 * Metodo que valida se o CPF possui 11 digitos
 	 * @param cpf
-	 * @return
+	 * @return booleano
 	 */
 	public boolean validaCpf(String cpf) {
-		if (cpf.length() > 11 || cpf.length() < 11) {
-			return false;
-		}return true;
+		return (cpf.length() == 11);
 	}
 	
 	/**
-	 * Metodo que após verificar existencia do cliente cadastra o mesmo no mapa 
+	 * Metodo que após verificar existencia do cliente cadastra o mesmo no mapa de clientes
 	 * @param cpf
 	 * @param nome
 	 * @param email
 	 * @param localizacao
 	 */
 	public void adicionaCliente(String cpf,String nome, String email, String localizacao) {
-		if(nome == null || nome.trim().equals("")) {
+		if(nome == null || nome.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro no cadastro do cliente: nome nao pode ser vazio ou nulo");
 		}
-		if(email == null || email.trim().equals("")) {
+		if(email == null || email.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro no cadastro do cliente: email nao pode ser vazio ou nulo.");
 		}
-		if(localizacao == null || localizacao.trim().equals("")) {
+		if(localizacao == null || localizacao.trim().isEmpty()) {
 			throw new IllegalArgumentException("Erro no cadastro do cliente: localizacao nao pode ser vazia ou nula.");
 		}
 		if(this.existeCliente(cpf)) {
@@ -54,10 +60,8 @@ public class ClienteController {
 		if(!this.validaCpf(cpf)) {
 			throw new IllegalArgumentException("Erro no cadastro do cliente: cpf invalido.");
 		}
-		if (!this.existeCliente(cpf)) {
-			Cliente c = new Cliente(cpf, nome, email, localizacao);
-			this.clientes.put(cpf, c);
-		}
+		Cliente c = new Cliente(cpf, nome, email, localizacao);
+		this.clientes.put(cpf, c);
 	}
 	/**
 	 * Metodo que retorna um cliente pelo seu cpf
@@ -72,12 +76,15 @@ public class ClienteController {
 		}
 	}
 	/**
-	 * Metodo que varre os valores do mapa e adicionam todos os clientes em uma lista
-	 * @return String contendo uma lista de clientes
+	 * Metodo que lista os clientes em ordem alfabetica
+	 * @return String contendo uma lista dos clientes
 	 */
-	public String listarClientes() {
+	public String exibeClientes() {
 		String lista = "";
-		for (Cliente c : this.clientes.values()) {
+		List<Cliente> listaOrd = new ArrayList<>();
+		listaOrd.addAll(this.clientes.values());
+		listaOrd.sort(ordemAlfabetica);
+		for (Cliente c : listaOrd) {
 			lista += c.toString() + " | ";
 		}return lista;
 	}
@@ -91,14 +98,23 @@ public class ClienteController {
 		if(!this.existeCliente(cpf)) {
 			throw new IllegalArgumentException("Erro na edicao do cliente: cliente nao existe.");
 		}
-		if(this.existeCliente(cpf)) {
-			if (atributo.equals("nome")) {
-				clientes.get(cpf).setNome(novoValor);
-			}else if(atributo.equals("email")){
-				clientes.get(cpf).setEmail(novoValor);
-			}else if(atributo.equals("localizacao")) {
-				clientes.get(cpf).setLocalizacao(novoValor);
-			}
+		if(atributo == null || atributo.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao do cliente: atributo nao pode ser vazio ou nulo.");
+		}
+		if(novoValor == null || novoValor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na edicao do cliente: novo valor nao pode ser vazio ou nulo.");
+		}
+		if(!atributo.equals("nome") || !atributo.equals("email") || !atributo.equals("localizacao")) {
+			throw new IllegalArgumentException("Erro na edicao do cliente: atributo nao existe.");
+		}
+		if (atributo.equals("nome")) {
+			this.clientes.get(cpf).setNome(novoValor);
+		}
+		if(atributo.equals("email")){
+			this.clientes.get(cpf).setEmail(novoValor);
+		}
+		if(atributo.equals("localizacao")) {
+			this.clientes.get(cpf).setLocalizacao(novoValor);
 		}
 	}
 	
@@ -110,10 +126,7 @@ public class ClienteController {
 	public Cliente removeCliente(String cpf) {
 		if(!this.existeCliente(cpf)) {
 			throw new IllegalArgumentException("Erro na exibicao do cliente: cliente nao existe.");
-		}else {
-			return this.clientes.remove(cpf);
 		}
+		return this.clientes.remove(cpf);
 	}
-
 }
-

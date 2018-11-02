@@ -5,49 +5,45 @@
  */
 public class Produto {
 	/**
-	 * Atributos que compoem um Produto representados em String
+	 * Atributos que compoem um Produto sendo nome de descrição representados em String e preço em double
 	 */
-	private String preco;
 	private String nome;
 	private String descricao;
-	/**
-	 * Construtor
-	 * @param preco
-	 * @param nome
-	 * @param descricao
-	 */
-	public Produto(String preco, String nome, String descricao) {
-		super();
-		this.preco = preco;
+	private double preco;
+
+	public Produto(String nome, String descricao, double preco) {
 		this.nome = nome;
 		this.descricao = descricao;
+		this.preco = preco;
 	}
-
-	public String getPreco() {
-		return preco;
-	}
-
+	
 	public String getNome() {
 		return nome;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setPreco(String preco) {
-		this.preco = preco;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	public String getDescricao() {
+		return descricao;
+	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+	public double getPreco() {
+		return preco;
+	}
+
+	public void setPreco(double preco) {
+		this.preco = preco;
+	}
+
 	/**
 	 * Metodo que gera um HashCode a partir do nome e descricao do Produto
+	 * @return inteiro que representa o HashCode
 	 */
 	@Override
 	public int hashCode() {
@@ -59,6 +55,7 @@ public class Produto {
 	}
 	/**
 	 * Metodo 'equals' que define que dois produtos são iguais se possuirem o mesmo nome e descrição
+	 * @return booleano que define se os dois produtos sao iguais ou não
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -82,7 +79,7 @@ public class Produto {
 		return true;
 	}
 	/**
-	 * Metodo toString que define a representacao textual da classe Produto
+	 * Metodo toString que retorna uma representacao textual da classe Produto
 	 */
 	@Override
 	public String toString() {

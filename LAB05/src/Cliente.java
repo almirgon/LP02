@@ -12,13 +12,7 @@ public class Cliente {
 	private String email;
 	private String localizacao;
 	
-	/**
-	 * Construtor
-	 * @param cpf
-	 * @param nome
-	 * @param email
-	 * @param localizacao
-	 */
+	
 	public Cliente(String cpf, String nome, String email, String localizacao) {
 		super();
 		this.cpf = cpf;
@@ -53,6 +47,7 @@ public class Cliente {
 	
 	/**
 	 * Metodo que gera um hashCode a partir do CPF do cliente
+	 * @return Um inteiro que representa o hashCode
 	 */
 	@Override
 	public int hashCode() {
@@ -63,6 +58,7 @@ public class Cliente {
 	}
 	/**
 	 * Metodo equals que define que dois clientes são iguais se possuirem o mesmo CPF
+	 * @return booleano que define se os dois clientes sao iguais ou não
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -81,7 +77,7 @@ public class Cliente {
 		return true;
 	}
 	/**
-	 * Metodo toString que define a representacao textual da classe Cliente
+	 * Metodo toString que retorna uma representacao textual da classe Cliente
 	 */
 	@Override
 	public String toString() {
