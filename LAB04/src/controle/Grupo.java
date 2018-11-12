@@ -16,7 +16,12 @@ public class Grupo {
 	private Set<Aluno> alunos;
 	
 	public Grupo(String nomeGrupo) {
-		super();
+		if(nomeGrupo == null) {
+			throw new IllegalArgumentException("nome do grupo nao pode ser nulo");
+		}
+		if(nomeGrupo.trim().isEmpty()) {
+			throw new IllegalArgumentException("nome do grupo nao pode ser vazio");
+		}
 		this.nomeGrupo = nomeGrupo;
 		this.alunos = new HashSet<>();
 	}

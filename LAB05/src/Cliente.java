@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe que representa um Cliente do SAGA
  * @author Almir Crispiniano - 117210914
@@ -11,6 +14,7 @@ public class Cliente {
 	private String nome;
 	private String email;
 	private String localizacao;
+	private List<Produto> compras;
 	
 	
 	public Cliente(String cpf, String nome, String email, String localizacao) {
@@ -19,6 +23,7 @@ public class Cliente {
 		this.nome = nome;
 		this.email = email;
 		this.localizacao = localizacao;
+		this.compras = new ArrayList<>();
 	}
 
 	public String getNome() {
@@ -83,5 +88,7 @@ public class Cliente {
 	public String toString() {
 		return this.getNome() + " - " + this.getLocalizacao() + " - " + this.getEmail();
 	}
-
+	
+	
+	
 }

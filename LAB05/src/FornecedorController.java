@@ -206,5 +206,12 @@ public class FornecedorController {
 		}
 		fornecedores.get(fornecedor).removeProduto(nome, descricao);
 	}
+	
+	public String exibeContasFornecedor(String cpf) {
+		String lista = "";
+		for (Fornecedor fornecedor : fornecedores.values()) {
+			lista += fornecedor.exibeContas(cpf);
+		}return lista;
+	}
 
 }

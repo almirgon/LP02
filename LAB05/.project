@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>acceptance_tests/use_case_4.txt</name>
+			<type>1</type>
+			<location>/home/almirgc/Downloads/use_case_4.txt</location>
+		</link>
+		<link>
+			<name>acceptance_tests/use_case_5.txt</name>
+			<type>1</type>
+			<location>/home/almirgc/Downloads/use_case_5.txt</location>
+		</link>
+	</linkedResources>
 </projectDescription>

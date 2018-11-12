@@ -3,7 +3,7 @@ package celular;
 import java.util.Arrays;
 
 /**
- * Classe responsavel por gerar agenda a partir dos contatos existentes no array
+ * Classe responsável por gerar agenda a partir dos contatos existentes no array
  * 
  * @author Almir Crispiniano - 117210914
  *
@@ -54,8 +54,7 @@ public class Agenda {
 	}
 
 	/**
-	 * Metodo que cadastra contato no array, após verificar sua existencia, ao
-	 * receber como parametros
+	 * Metodo que cadastra contato no array, após verificar sua existência
 	 * 
 	 * @param nome      em String
 	 * @param sobrenome em String
@@ -63,11 +62,13 @@ public class Agenda {
 	 * @param posicao   em inteiro
 	 * @return
 	 */
-	public void cadastraContato(String nome, String sobrenome, String telefone, int posicao) {
-		if (this.verificaExistencia(posicao)) {
+	public boolean cadastraContato(String nome, String sobrenome, String telefone, int posicao) {
+		if (!this.verificaExistencia(posicao)) {
 			throw new IllegalArgumentException("POSICAO INVALIDA");
+		}else {
+		 contatos[posicao - 1] = new Contato(nome, sobrenome, telefone);
+		 return true;
 		}
-		contatos[posicao - 1] = new Contato(nome, sobrenome, telefone);
 	}
 
 	/**
@@ -81,7 +82,10 @@ public class Agenda {
 		Contato c = this.contatos[posicao - 1];
 		return c.toString();
 	}
-
+	/**
+	 * Metodo que lista todos os contatos existentes na agenda
+	 * @return
+	 */
 	public String listarContato() {
 		String lista = "";
 		for (int i = 0; i < contatos.length; i++) {
@@ -105,8 +109,8 @@ public class Agenda {
 	}
 
 	/**
-	 * Metodo equals que compara se duas agendas são iguais São iguais: se as duas
-	 * possuem os mesmos contatos nas mesma posições
+	 * Metodo equals que compara se duas agendas são iguais, as mesmas seram iguais se as duas
+	 * possuem os mesmos contatos nas mesmas posições
 	 */
 	@Override
 	public boolean equals(Object obj) {

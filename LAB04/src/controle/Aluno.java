@@ -13,6 +13,29 @@ public class Aluno {
 	private String curso;
 	
 	public Aluno(String matricula, String nome, String curso) {
+		if(nome == null) {
+			throw new IllegalArgumentException("nome nao pode ser nulo");
+		}
+		
+		if (nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("nome nao pode ser vazio");
+		}
+
+		if (matricula == null) {
+			throw new IllegalArgumentException("matricula nao pode ser nula");
+		}
+
+		if (matricula.trim().isEmpty()) {
+			throw new IllegalArgumentException("matricula nao pode ser vazia");
+		}
+
+		if (curso == null) {
+			throw new IllegalArgumentException("curso nao pode ser nulo");
+		}
+
+		if (curso.trim().isEmpty()) {
+			throw new IllegalArgumentException("curso nao pode ser vazio");
+		}
 		this.matricula = matricula;
 		this.nome = nome;
 		this.curso = curso;
